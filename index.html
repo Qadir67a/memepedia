@@ -20,13 +20,11 @@
             height: 100vh;
         }
 
-        /* Container for the initial buttons */
         #button-container {
             display: flex;
             gap: 15px;
         }
 
-        /* Button Styling based on your image */
         .btn {
             padding: 12px 24px;
             font-size: 16px;
@@ -43,17 +41,16 @@
 
         .btn-outline {
             background-color: transparent;
-            color: #b0008b; /* Magenta/Purple text */
+            color: #b0008b;
             border: 1px solid #b0008b;
         }
 
         .btn-solid {
-            background-color: #4a043f; /* Dark plum/purple */
+            background-color: #4a043f;
             color: #ffffff;
             border: 1px solid #4a043f;
         }
 
-        /* Form Container (Hidden by default) */
         .form-container {
             display: none;
             flex-direction: column;
@@ -90,7 +87,7 @@
 
     <div id="signin-form" class="form-container">
         <h2 style="color: #4a043f; margin: 0 0 10px 0;">Sign In</h2>
-        <input type="email" id="login-email" placeholder="Email" required>
+        <input type="text" id="login-username" placeholder="Username" required>
         <input type="password" id="login-password" placeholder="Password" required>
         <button class="btn btn-outline" onclick="signIn()">Submit</button>
         <span class="back-link" onclick="showButtons()">Back</span>
@@ -98,7 +95,6 @@
 
     <div id="signup-form" class="form-container">
         <h2 style="color: #4a043f; margin: 0 0 10px 0;">Create Account</h2>
-        <input type="email" id="signup-email" placeholder="Email (Required for Supabase)" required>
         <input type="text" id="signup-username" placeholder="Username" required>
         <input type="password" id="signup-password" placeholder="Password" required>
         <select id="signup-gender">
@@ -136,24 +132,32 @@
             buttonContainer.style.display = 'flex';
         }
 
+        // Helper function to convert a username into a dummy email
+        function generateDummyEmail(username) {
+            // Removes spaces/special chars to ensure valid email format
+            const cleanUsername = username.toLowerCase().replace(/[^a-z0-9]/g, '');
+            return `${cleanUsername}@dummy-app.com`;
+        }
+
         // 3. Supabase Auth Functions
         async function signUp() {
-            const email = document.getElementById('signup-email').value;
-            const password = document.getElementById('signup-password').value;
             const username = document.getElementById('signup-username').value;
+            const password = document.getElementById('signup-password').value;
             const gender = document.getElementById('signup-gender').value;
             const birthday = document.getElementById('signup-birthday').value;
 
-            if (!email || !password || !username) {
-                alert("Please fill in all required fields.");
+            if (!username || !password) {
+                alert("Please fill in a username and password.");
                 return;
             }
 
+            // Generate the fake email for Supabase
+            const dummyEmail = generateDummyEmail(username);
+
             const { data, error } = await supabase.auth.signUp({
-                email: email,
+                email: dummyEmail, 
                 password: password,
                 options: {
-                    // Storing custom data in the user's metadata
                     data: {
                         username: username,
                         gender: gender,
@@ -165,31 +169,34 @@
             if (error) {
                 alert("Error: " + error.message);
             } else {
-                alert("Account created successfully! Check your email for verification.");
+                alert("Account created successfully!");
                 showButtons();
             }
         }
 
         async function signIn() {
-            const email = document.getElementById('login-email').value;
+            const username = document.getElementById('login-username').value;
             const password = document.getElementById('login-password').value;
 
-            if (!email || !password) {
-                alert("Please enter email and password.");
+            if (!username || !password) {
+                alert("Please enter your username and password.");
                 return;
             }
 
+            // Reconstruct the fake email to log them in
+            const dummyEmail = generateDummyEmail(username);
+
             const { data, error } = await supabase.auth.signInWithPassword({
-                email: email,
+                email: dummyEmail,
                 password: password,
             });
 
             if (error) {
-                alert("Error: " + error.message);
+                // Friendly error message so they don't see "Invalid email"
+                alert("Login failed. Please check your username and password.");
             } else {
                 alert("Signed in successfully!");
                 console.log("User Data:", data.user);
-                // Redirect or update UI here
             }
         }
     </script>
