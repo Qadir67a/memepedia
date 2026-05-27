@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homepage</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: sans-serif;
+        }
+
+        body {
+            background-color: #ffffff;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        /* Container for the initial buttons */
+        #button-container {
+            display: flex;
+            gap: 15px;
+        }
+
+        /* Button Styling based on your image */
+        .btn {
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: opacity 0.2s;
+        }
+
+        .btn:hover {
+            opacity: 0.8;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: #b0008b; /* Magenta/Purple text */
+            border: 1px solid #b0008b;
+        }
+
+        .btn-solid {
+            background-color: #4a043f; /* Dark plum/purple */
+            color: #ffffff;
+            border: 1px solid #4a043f;
+        }
+
+        /* Form Container (Hidden by default) */
+        .form-container {
+            display: none;
+            flex-direction: column;
+            width: 300px;
+            gap: 15px;
+        }
+
+        .form-container.active {
+            display: flex;
+        }
+
+        .form-container input, .form-container select {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .back-link {
+            color: #4a043f;
+            text-align: center;
+            cursor: pointer;
+            text-decoration: underline;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="button-container">
+        <button class="btn btn-outline" onclick="showForm('signin-form')">Sign In</button>
+        <button class="btn btn-solid" onclick="showForm('signup-form')">Create a Free Account</button>
+    </div>
+
+    <div id="signin-form" class="form-container">
+        <h2 style="color: #4a043f; margin: 0 0 10px 0;">Sign In</h2>
+        <input type="email" id="login-email" placeholder="Email" required>
+        <input type="password" id="login-password" placeholder="Password" required>
+        <button class="btn btn-outline" onclick="signIn()">Submit</button>
+        <span class="back-link" onclick="showButtons()">Back</span>
+    </div>
+
+    <div id="signup-form" class="form-container">
+        <h2 style="color: #4a043f; margin: 0 0 10px 0;">Create Account</h2>
+        <input type="email" id="signup-email" placeholder="Email (Required for Supabase)" required>
+        <input type="text" id="signup-username" placeholder="Username" required>
+        <input type="password" id="signup-password" placeholder="Password" required>
+        <select id="signup-gender">
+            <option value="">Select Gender</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
+        </select>
+        <input type="date" id="signup-birthday" required>
+        <button class="btn btn-solid" onclick="signUp()">Register</button>
+        <span class="back-link" onclick="showButtons()">Back</span>
+    </div>
+
+    <script>
+        // 1. Initialize Supabase
+        const supabaseUrl = 'YOUR_SUPABASE_URL';
+        const supabaseKey = 'YOUR_SUPABASE_ANON_KEY';
+        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+        // 2. UI Navigation Functions
+        const buttonContainer = document.getElementById('button-container');
+        const signinForm = document.getElementById('signin-form');
+        const signupForm = document.getElementById('signup-form');
+
+        function showForm(formId) {
+            buttonContainer.style.display = 'none';
+            signinForm.classList.remove('active');
+            signupForm.classList.remove('active');
+            document.getElementById(formId).classList.add('active');
+        }
+
+        function showButtons() {
+            signinForm.classList.remove('active');
+            signupForm.classList.remove('active');
+            buttonContainer.style.display = 'flex';
+        }
+
+        // 3. Supabase Auth Functions
+        async function signUp() {
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+            const username = document.getElementById('signup-username').value;
+            const gender = document.getElementById('signup-gender').value;
+            const birthday = document.getElementById('signup-birthday').value;
+
+            if (!email || !password || !username) {
+                alert("Please fill in all required fields.");
+                return;
+            }
+
+            const { data, error } = await supabase.auth.signUp({
+                email: email,
+                password: password,
+                options: {
+                    // Storing custom data in the user's metadata
+                    data: {
+                        username: username,
+                        gender: gender,
+                        birthday: birthday
+                    }
+                }
+            });
+
+            if (error) {
+                alert("Error: " + error.message);
+            } else {
+                alert("Account created successfully! Check your email for verification.");
+                showButtons();
+            }
+        }
+
+        async function signIn() {
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+
+            if (!email || !password) {
+                alert("Please enter email and password.");
+                return;
+            }
+
+            const { data, error } = await supabase.auth.signInWithPassword({
+                email: email,
+                password: password,
+            });
+
+            if (error) {
+                alert("Error: " + error.message);
+            } else {
+                alert("Signed in successfully!");
+                console.log("User Data:", data.user);
+                // Redirect or update UI here
+            }
+        }
+    </script>
+</body>
+</html>
