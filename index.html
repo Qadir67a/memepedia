@@ -1,268 +1,448 @@
 <!DOCTYPE html>
+
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Homepage</title>
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
     <style>
+
         * {
+
             box-sizing: border-box;
+
             font-family: sans-serif;
+
         }
+
+
 
         body {
-            /* Starry Space Background using CSS Gradients */
-            background-color: #0b010a;
-            background-image: 
-                radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 40px),
-                radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 30px),
-                radial-gradient(white, rgba(255,255,255,.1) 2px, transparent 40px);
-            background-size: 550px 550px, 350px 350px, 250px 250px;
-            background-position: 0 0, 40px 60px, 130px 270px;
+
+            background-color: #ffffff;
+
             margin: 0;
+
             display: flex;
+
             justify-content: center;
+
             align-items: center;
+
             height: 100vh;
-            overflow: hidden;
+
         }
+
+
 
         #button-container {
+
             display: flex;
+
             gap: 15px;
-            position: relative;
-            z-index: 10;
+
         }
+
+
 
         .btn {
+
             padding: 12px 24px;
+
             font-size: 16px;
+
             font-weight: bold;
+
             border-radius: 4px;
+
             cursor: pointer;
+
             text-transform: uppercase;
+
             transition: opacity 0.2s;
+
         }
+
+
 
         .btn:hover {
+
             opacity: 0.8;
+
         }
+
+
 
         .btn-outline {
+
             background-color: transparent;
+
             color: #b0008b;
+
             border: 1px solid #b0008b;
+
         }
 
-        /* Adjusted button style slightly to pop on the dark background */
-        body:not(:has(.form-container.active)) .btn-outline {
-            color: #ff5cd3;
-            border: 1px solid #ff5cd3;
-        }
+
 
         .btn-solid {
+
             background-color: #4a043f;
+
             color: #ffffff;
+
             border: 1px solid #4a043f;
+
         }
 
-        /* Form Container styled into an aesthetic card with side-by-side layout */
+
+
         .form-container {
+
             display: none;
-            background-color: #ffffff;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            gap: 35px;
-            align-items: center;
-            position: relative;
-            z-index: 10;
+
+            flex-direction: column;
+
+            width: 300px;
+
+            gap: 15px;
+
         }
+
+
 
         .form-container.active {
+
             display: flex;
-            flex-direction: row; /* Form elements left, Nyan Cat right */
+
         }
 
-        .form-fields {
-            display: flex;
-            flex-direction: column;
-            width: 300px;
-            gap: 15px;
-        }
 
-        /* --- STATIC NYAN CAT CSS --- */
-        .form-nyan-cat {
-            width: 240px; /* Big and visible */
-            height: auto;
-            opacity: 0.85; /* Beautiful visibility balance */
-            mix-blend-mode: multiply; /* Removes white background from GIF if present */
-            pointer-events: none;
-            user-select: none;
-        }
 
         .form-container input, .form-container select {
+
             padding: 10px;
+
             border: 1px solid #ccc;
+
             border-radius: 4px;
+
             font-size: 14px;
-            width: 100%;
+
         }
+
+
 
         .back-link {
+
             color: #4a043f;
+
             text-align: center;
+
             cursor: pointer;
+
             text-decoration: underline;
+
             font-size: 14px;
+
         }
+
     </style>
+
 </head>
+
 <body>
 
+
+
     <div id="button-container">
+
         <button class="btn btn-outline" onclick="showForm('signin-form')">Sign In</button>
+
         <button class="btn btn-solid" onclick="showForm('signup-form')">Create a Free Account</button>
+
     </div>
+
+
 
     <div id="signin-form" class="form-container">
-        <div class="form-fields">
-            <h2 style="color: #4a043f; margin: 0 0 10px 0;">Sign In</h2>
-            <input type="text" id="login-username" placeholder="Username" required>
-            <input type="password" id="login-password" placeholder="Password" required>
-            <button class="btn btn-outline" onclick="signIn()">Submit</button>
-            <span class="back-link" onclick="showButtons()">Back</span>
-        </div>
-        <img src="rainbowcat.gif" alt="Nyan Cat" class="form-nyan-cat">
+
+        <h2 style="color: #4a043f; margin: 0 0 10px 0;">Sign In</h2>
+
+        <input type="text" id="login-username" placeholder="Username" required>
+
+        <input type="password" id="login-password" placeholder="Password" required>
+
+        <button class="btn btn-outline" onclick="signIn()">Submit</button>
+
+        <span class="back-link" onclick="showButtons()">Back</span>
+
     </div>
+
+
 
     <div id="signup-form" class="form-container">
-        <div class="form-fields">
-            <h2 style="color: #4a043f; margin: 0 0 10px 0;">Create Account</h2>
-            <input type="text" id="signup-username" placeholder="Username" required>
-            <input type="password" id="signup-password" placeholder="Password" required>
-            <select id="signup-gender">
-                <option value="">Select Gender</option>
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-                <option value="other">Other</option>
-            </select>
-            <input type="date" id="signup-birthday" required>
-            <button class="btn btn-solid" onclick="signUp()">Register</button>
-            <span class="back-link" onclick="showButtons()">Back</span>
-        </div>
-        <img src="rainbowcat.gif" alt="Nyan Cat" class="form-nyan-cat">
+
+        <h2 style="color: #4a043f; margin: 0 0 10px 0;">Create Account</h2>
+
+        <input type="text" id="signup-username" placeholder="Username" required>
+
+        <input type="password" id="signup-password" placeholder="Password" required>
+
+        <select id="signup-gender">
+
+            <option value="">Select Gender</option>
+
+            <option value="male">Male</option>
+
+            <option value="female">Female</option>
+
+            <option value="other">Other</option>
+
+        </select>
+
+        <input type="date" id="signup-birthday" required>
+
+        <button class="btn btn-solid" onclick="signUp()">Register</button>
+
+        <span class="back-link" onclick="showButtons()">Back</span>
+
     </div>
 
+
+
     <script>
-        // 1. Safe Supabase Initialization
+
+        // 1. Safe Supabase Initialization (Renamed variable to supabaseClient)
+
         const supabaseUrl = 'https://bbyiajxjggvdhxxhfaeu.supabase.co/';
+
         const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJieWlhanhqZ2d2ZGh4eGhmYWV1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk4ODg4NDIsImV4cCI6MjA5NTQ2NDg0Mn0.JQLQ0ZXh_7T2wZ_LkU1vAx9yH4vnJ7o00W3RsX_HjZY';
+
         
+
         let supabaseClient;
 
+
+
         try {
+
             if (window.supabase) {
+
+                // We use window.supabase (the library) to create our specific client connection
+
                 supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
+
             } else {
+
                 console.error("Supabase CDN failed to load. If you are using Brave or an AdBlocker, try turning it off for this local file.");
+
             }
+
         } catch (error) {
+
             console.error("Failed to initialize Supabase client:", error);
+
         }
+
+
 
         // 2. UI Navigation Functions
+
         const buttonContainer = document.getElementById('button-container');
+
         const signinForm = document.getElementById('signin-form');
+
         const signupForm = document.getElementById('signup-form');
 
+
+
         function showForm(formId) {
+
             buttonContainer.style.display = 'none';
+
             signinForm.classList.remove('active');
+
             signupForm.classList.remove('active');
+
             document.getElementById(formId).classList.add('active');
+
         }
+
+
 
         function showButtons() {
+
             signinForm.classList.remove('active');
+
             signupForm.classList.remove('active');
+
             buttonContainer.style.display = 'flex';
+
         }
+
+
 
         // Helper function to convert a username into a dummy email
+
         function generateDummyEmail(username) {
+
             const cleanUsername = username.toLowerCase().replace(/[^a-z0-9]/g, '');
+
             return `${cleanUsername}@dummy-app.com`;
+
         }
+
+
 
         // 3. Supabase Auth Functions
+
         async function signUp() {
+
             if (!supabaseClient) {
+
                 alert("Cannot connect to database. Check your internet connection or browser extensions.");
+
                 return;
+
             }
+
+
 
             const username = document.getElementById('signup-username').value;
+
             const password = document.getElementById('signup-password').value;
+
             const gender = document.getElementById('signup-gender').value;
+
             const birthday = document.getElementById('signup-birthday').value;
 
+
+
             if (!username || !password) {
+
                 alert("Please fill in a username and password.");
+
                 return;
+
             }
 
+
+
             const dummyEmail = generateDummyEmail(username);
+
+
+
+            // Use supabaseClient here
 
             const { data, error } = await supabaseClient.auth.signUp({
+
                 email: dummyEmail, 
+
                 password: password,
+
                 options: {
+
                     data: {
+
                         username: username,
+
                         gender: gender,
+
                         birthday: birthday
+
                     }
+
                 }
+
             });
 
+
+
             if (error) {
+
                 alert("Error: " + error.message);
+
             } else {
+
                 alert("Account created successfully!");
+
                 showButtons();
+
             }
+
         }
 
+
+
         async function signIn() {
+
             if (!supabaseClient) {
+
                 alert("Cannot connect to database.");
+
                 return;
+
             }
+
+
 
             const username = document.getElementById('login-username').value;
+
             const password = document.getElementById('login-password').value;
 
+
+
             if (!username || !password) {
+
                 alert("Please enter your username and password.");
+
                 return;
+
             }
+
+
 
             const dummyEmail = generateDummyEmail(username);
 
+
+
+            // Use supabaseClient here
+
             const { data, error } = await supabaseClient.auth.signInWithPassword({
+
                 email: dummyEmail,
+
                 password: password,
+
             });
 
+
+
             if (error) {
+
                 alert("Login failed. Please check your username and password.");
+
             } else {
+
                 alert("Signed in successfully!");
+
                 console.log("User Data:", data.user);
+
             }
+
         }
+
     </script>
+
 </body>
-</html>
+
+</html> 
+
