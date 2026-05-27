@@ -109,12 +109,22 @@
     </div>
 
     <script>
-        // 1. Initialize Supabase
+        // 1. Safe Supabase Initialization
         const supabaseUrl = 'https://bbyiajxjggvdhxxhfaeu.supabase.co/';
         const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJieWlhanhqZ2d2ZGh4eGhmYWV1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk4ODg4NDIsImV4cCI6MjA5NTQ2NDg0Mn0.JQLQ0ZXh_7T2wZ_LkU1vAx9yH4vnJ7o00W3RsX_HjZY';
-        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+        let supabase;
 
-        // 2. UI Navigation Functions
+        try {
+            if (window.supabase) {
+                supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+            } else {
+                console.error("Supabase CDN failed to load. If you are using Brave or an AdBlocker, try turning it off for this local file.");
+            }
+        } catch (error) {
+            console.error("Failed to initialize Supabase client:", error);
+        }
+
+        // 2. UI Navigation Functions (Will work perfectly now even if Supabase fails)
         const buttonContainer = document.getElementById('button-container');
         const signinForm = document.getElementById('signin-form');
         const signupForm = document.getElementById('signup-form');
@@ -134,13 +144,17 @@
 
         // Helper function to convert a username into a dummy email
         function generateDummyEmail(username) {
-            // Removes spaces/special chars to ensure valid email format
             const cleanUsername = username.toLowerCase().replace(/[^a-z0-9]/g, '');
             return `${cleanUsername}@dummy-app.com`;
         }
 
         // 3. Supabase Auth Functions
         async function signUp() {
+            if (!supabase) {
+                alert("Cannot connect to database. Check your internet connection or browser extensions (like AdBlockers).");
+                return;
+            }
+
             const username = document.getElementById('signup-username').value;
             const password = document.getElementById('signup-password').value;
             const gender = document.getElementById('signup-gender').value;
@@ -151,7 +165,6 @@
                 return;
             }
 
-            // Generate the fake email for Supabase
             const dummyEmail = generateDummyEmail(username);
 
             const { data, error } = await supabase.auth.signUp({
@@ -175,6 +188,11 @@
         }
 
         async function signIn() {
+            if (!supabase) {
+                alert("Cannot connect to database.");
+                return;
+            }
+
             const username = document.getElementById('login-username').value;
             const password = document.getElementById('login-password').value;
 
@@ -183,7 +201,6 @@
                 return;
             }
 
-            // Reconstruct the fake email to log them in
             const dummyEmail = generateDummyEmail(username);
 
             const { data, error } = await supabase.auth.signInWithPassword({
@@ -192,7 +209,6 @@
             });
 
             if (error) {
-                // Friendly error message so they don't see "Invalid email"
                 alert("Login failed. Please check your username and password.");
             } else {
                 alert("Signed in successfully!");
