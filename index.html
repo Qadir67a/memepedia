@@ -1,272 +1,512 @@
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memepedia - Auth</title>
 
-    <title>Homepage</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;700&display=swap" rel="stylesheet">
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
 
-        * {
-
-            box-sizing: border-box;
-
-            font-family: sans-serif;
-
+        *{
+            box-sizing:border-box;
+            font-family:'Pixelify Sans',sans-serif !important;
         }
 
-
-
-        body {
-
-            background-color: #ffffff;
-
-            margin: 0;
-
-            display: flex;
-
-            justify-content: center;
-
-            align-items: center;
-
-            height: 100vh;
-
+        body{
+            margin:0;
+            padding:0;
+            background:#ffffff;
+            overflow:hidden;
+            height:100vh;
+            color:#121212;
         }
 
+        /* TOP BUTTONS */
 
-
-        #button-container {
-
-            display: flex;
-
-            gap: 15px;
-
+        #top-nav{
+            position:fixed;
+            top:24px;
+            right:24px;
+            display:flex;
+            gap:16px;
+            z-index:999;
         }
 
-
-
-        .btn {
-
-            padding: 12px 24px;
-
-            font-size: 16px;
-
-            font-weight: bold;
-
-            border-radius: 4px;
-
-            cursor: pointer;
-
-            text-transform: uppercase;
-
-            transition: opacity 0.2s;
-
+        .nav-btn{
+            padding:14px 26px;
+            font-size:15px;
+            font-weight:700;
+            border-radius:8px;
+            cursor:pointer;
+            text-transform:uppercase;
+            transition:0.25s;
+            letter-spacing:1px;
         }
 
-
-
-        .btn:hover {
-
-            opacity: 0.8;
-
+        .nav-btn-outline{
+            background:#ffffff;
+            color:#121212;
+            border:2px solid #121212;
         }
 
-
-
-        .btn-outline {
-
-            background-color: transparent;
-
-            color: #b0008b;
-
-            border: 1px solid #b0008b;
-
+        .nav-btn-outline:hover{
+            transform:translateY(-2px);
+            box-shadow:0 5px 14px rgba(0,0,0,0.15);
         }
 
-
-
-        .btn-solid {
-
-            background-color: #4a043f;
-
-            color: #ffffff;
-
-            border: 1px solid #4a043f;
-
+        .nav-btn-solid{
+            background:#b0008b;
+            color:white;
+            border:2px solid #b0008b;
         }
 
-
-
-        .form-container {
-
-            display: none;
-
-            flex-direction: column;
-
-            width: 300px;
-
-            gap: 15px;
-
+        .nav-btn-solid:hover{
+            background:#d000a4;
+            border-color:#d000a4;
+            transform:translateY(-2px);
+            box-shadow:0 6px 16px rgba(176,0,139,0.35);
         }
 
+        /* HOMEPAGE */
 
-
-        .form-container.active {
-
-            display: flex;
-
+        .homepage{
+            width:100%;
+            height:100vh;
+            background:#ffffff;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            flex-direction:column;
+            gap:18px;
+            transition:0.4s;
         }
 
-
-
-        .form-container input, .form-container select {
-
-            padding: 10px;
-
-            border: 1px solid #ccc;
-
-            border-radius: 4px;
-
-            font-size: 14px;
-
+        .homepage.hidden{
+            opacity:0;
+            pointer-events:none;
+            position:absolute;
         }
 
+        .home-logo{
+            font-size:72px;
+            font-weight:700;
+            letter-spacing:4px;
+            margin:0;
+        }
 
+        .home-text{
+            font-size:20px;
+            color:#666;
+            margin-top:-10px;
+        }
 
-        .back-link {
+        /* AUTH SCREEN */
 
-            color: #4a043f;
+        .auth-screen{
+            width:100%;
+            height:100vh;
+            display:none;
+        }
 
-            text-align: center;
+        .auth-screen.active{
+            display:flex;
+        }
 
-            cursor: pointer;
+        .left-panel{
+            width:45%;
+            background:#ffffff;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            padding:40px;
+        }
 
-            text-decoration: underline;
+        .right-panel{
+            width:55%;
+            height:100vh;
+            background:#000;
+        }
 
-            font-size: 14px;
+        .right-panel img{
+            width:100%;
+            height:100%;
+            object-fit:cover;
+        }
 
+        /* FORM */
+
+        .form-container{
+            display:none;
+            flex-direction:column;
+            width:100%;
+            max-width:420px;
+            gap:18px;
+            background:#ffffff;
+            padding:42px;
+            border-radius:14px;
+            box-shadow:0 10px 40px rgba(0,0,0,0.08);
+            border:1px solid #f0f0f0;
+            animation:fadeIn .4s ease forwards;
+        }
+
+        .form-container.active{
+            display:flex;
+        }
+
+        @keyframes fadeIn{
+            from{
+                opacity:0;
+                transform:translateY(10px);
+            }
+            to{
+                opacity:1;
+                transform:translateY(0);
+            }
+        }
+
+        .form-container h2{
+            font-size:34px;
+            margin:0;
+            text-align:center;
+            text-transform:uppercase;
+        }
+
+        .form-subtitle{
+            text-align:center;
+            color:#666;
+            margin-top:-8px;
+            margin-bottom:8px;
+            font-size:15px;
+        }
+
+        .input-group{
+            display:flex;
+            flex-direction:column;
+            gap:8px;
+        }
+
+        .input-group label{
+            font-size:14px;
+            font-weight:700;
+        }
+
+        .form-container input,
+        .form-container select{
+            width:100%;
+            padding:16px;
+            border-radius:8px;
+            border:2px solid #e0e0e0;
+            background:#f9f9f9;
+            font-size:16px;
+            outline:none;
+            transition:0.25s;
+        }
+
+        .form-container input:focus,
+        .form-container select:focus{
+            border-color:#a855f7;
+            background:#ffffff;
+            box-shadow:0 0 0 4px rgba(168,85,247,0.1);
+        }
+
+        .password-wrapper{
+            position:relative;
+        }
+
+        .password-wrapper input{
+            padding-right:85px;
+        }
+
+        .toggle-password{
+            position:absolute;
+            right:12px;
+            top:50%;
+            transform:translateY(-50%);
+            border:none;
+            background:none;
+            cursor:pointer;
+            color:#7c3aed;
+            font-weight:700;
+            font-size:13px;
+        }
+
+        .remember-row{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            font-size:14px;
+        }
+
+        .remember-me{
+            display:flex;
+            align-items:center;
+            gap:8px;
+            color:#444;
+        }
+
+        .remember-me input{
+            width:auto;
+        }
+
+        .forgot-link{
+            color:#7c3aed;
+            text-decoration:none;
+            font-weight:700;
+        }
+
+        .submit-btn{
+            width:100%;
+            padding:16px;
+            border:none;
+            border-radius:8px;
+            font-size:18px;
+            font-weight:700;
+            cursor:pointer;
+            color:white;
+            background:linear-gradient(45deg,#7c3aed,#b0008b);
+            text-transform:uppercase;
+            letter-spacing:1px;
+            transition:0.25s;
+        }
+
+        .submit-btn:hover{
+            transform:translateY(-2px);
+            box-shadow:0 8px 20px rgba(124,58,237,0.3);
+        }
+
+        .switch-form{
+            text-align:center;
+            font-size:15px;
+            color:#666;
+        }
+
+        .switch-form span{
+            color:#7c3aed;
+            cursor:pointer;
+            font-weight:700;
         }
 
     </style>
-
 </head>
-
 <body>
 
+    <!-- TOP NAV -->
 
+    <div id="top-nav">
+        <button class="nav-btn nav-btn-outline" onclick="openAuth('signin-form')">
+            Sign In
+        </button>
 
-    <div id="button-container">
+        <button class="nav-btn nav-btn-solid" onclick="openAuth('signup-form')">
+            Create Account
+        </button>
+    </div>
 
-        <button class="btn btn-outline" onclick="showForm('signin-form')">Sign In</button>
+    <!-- WHITE HOMEPAGE -->
 
-        <button class="btn btn-solid" onclick="showForm('signup-form')">Create a Free Account</button>
+    <div class="homepage" id="homepage">
+
+        <h1 class="home-logo">MEMEPEDIA</h1>
+
+        <p class="home-text">
+            Enter the meme universe.
+        </p>
 
     </div>
 
+    <!-- AUTH SCREEN -->
 
+    <div class="auth-screen" id="auth-screen">
 
-    <div id="signin-form" class="form-container">
+        <!-- LEFT -->
 
-        <h2 style="color: #4a043f; margin: 0 0 10px 0;">Sign In</h2>
+        <div class="left-panel">
 
-        <input type="text" id="login-username" placeholder="Username" required>
+            <!-- SIGN IN -->
 
-        <input type="password" id="login-password" placeholder="Password" required>
+            <div id="signin-form" class="form-container">
 
-        <button class="btn btn-outline" onclick="signIn()">Submit</button>
+                <h2>Welcome Back</h2>
 
-        <span class="back-link" onclick="showButtons()">Back</span>
+                <p class="form-subtitle">
+                    Log in to continue your Memepedia journey.
+                </p>
+
+                <div class="input-group">
+                    <label>Username</label>
+                    <input type="text" id="login-username" placeholder="Enter your username" required>
+                </div>
+
+                <div class="input-group">
+                    <label>Password</label>
+
+                    <div class="password-wrapper">
+                        <input type="password" id="login-password" placeholder="Enter your password" required>
+
+                        <button type="button"
+                                class="toggle-password"
+                                onclick="togglePassword('login-password', this)">
+                            SHOW
+                        </button>
+                    </div>
+                </div>
+
+                <div class="remember-row">
+
+                    <label class="remember-me">
+                        <input type="checkbox">
+                        Remember Me
+                    </label>
+
+                    <a href="#" class="forgot-link">
+                        Forgot Password?
+                    </a>
+
+                </div>
+
+                <button class="submit-btn" onclick="signIn()">
+                    Log In
+                </button>
+
+                <div class="switch-form">
+                    Don't have an account?
+                    <span onclick="showForm('signup-form')">
+                        Create One
+                    </span>
+                </div>
+
+            </div>
+
+            <!-- SIGN UP -->
+
+            <div id="signup-form" class="form-container">
+
+                <h2>Create Account</h2>
+
+                <p class="form-subtitle">
+                    Join Memepedia and create your profile.
+                </p>
+
+                <div class="input-group">
+                    <label>Username</label>
+                    <input type="text" id="signup-username" placeholder="Choose a username" required>
+                </div>
+
+                <div class="input-group">
+                    <label>Password</label>
+
+                    <div class="password-wrapper">
+
+                        <input type="password"
+                               id="signup-password"
+                               placeholder="Create a password"
+                               required>
+
+                        <button type="button"
+                                class="toggle-password"
+                                onclick="togglePassword('signup-password', this)">
+                            SHOW
+                        </button>
+
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>Gender</label>
+
+                    <select id="signup-gender">
+                        <option value="">Select Gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label>Birthday</label>
+                    <input type="date" id="signup-birthday" required>
+                </div>
+
+                <button class="submit-btn" onclick="signUp()">
+                    Create Account
+                </button>
+
+                <div class="switch-form">
+                    Already have an account?
+                    <span onclick="showForm('signin-form')">
+                        Sign In
+                    </span>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- RIGHT GIF PANEL -->
+
+        <div class="right-panel">
+            <img src="rainbowcat.gif" alt="GIF">
+        </div>
 
     </div>
-
-
-
-    <div id="signup-form" class="form-container">
-
-        <h2 style="color: #4a043f; margin: 0 0 10px 0;">Create Account</h2>
-
-        <input type="text" id="signup-username" placeholder="Username" required>
-
-        <input type="password" id="signup-password" placeholder="Password" required>
-
-        <select id="signup-gender">
-
-            <option value="">Select Gender</option>
-
-            <option value="male">Male</option>
-
-            <option value="female">Female</option>
-
-            <option value="other">Other</option>
-
-        </select>
-
-        <input type="date" id="signup-birthday" required>
-
-        <button class="btn btn-solid" onclick="signUp()">Register</button>
-
-        <span class="back-link" onclick="showButtons()">Back</span>
-
-    </div>
-
-
 
     <script>
 
-        // 1. Safe Supabase Initialization (Renamed variable to supabaseClient)
+        // SUPABASE
 
         const supabaseUrl = 'https://bbyiajxjggvdhxxhfaeu.supabase.co/';
 
-        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJieWlhanhqZ2d2ZGh4eGhmYWV1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk4ODg4NDIsImV4cCI6MjA5NTQ2NDg0Mn0.JQLQ0ZXh_7T2wZ_LkU1vAx9yH4vnJ7o00W3RsX_HjZY';
-
-        
+        const supabaseKey = 'YOUR_SUPABASE_KEY';
 
         let supabaseClient;
 
+        try{
 
-
-        try {
-
-            if (window.supabase) {
-
-                // We use window.supabase (the library) to create our specific client connection
-
-                supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
-
-            } else {
-
-                console.error("Supabase CDN failed to load. If you are using Brave or an AdBlocker, try turning it off for this local file.");
-
+            if(window.supabase){
+                supabaseClient = window.supabase.createClient(
+                    supabaseUrl,
+                    supabaseKey
+                );
             }
 
-        } catch (error) {
+        }catch(error){
 
-            console.error("Failed to initialize Supabase client:", error);
+            console.error(error);
 
         }
 
+        // ELEMENTS
 
+        const homepage = document.getElementById('homepage');
 
-        // 2. UI Navigation Functions
-
-        const buttonContainer = document.getElementById('button-container');
+        const authScreen = document.getElementById('auth-screen');
 
         const signinForm = document.getElementById('signin-form');
 
         const signupForm = document.getElementById('signup-form');
 
+        // OPEN AUTH
 
+        function openAuth(formId){
 
-        function showForm(formId) {
+            homepage.classList.add('hidden');
 
-            buttonContainer.style.display = 'none';
+            authScreen.classList.add('active');
+
+            showForm(formId);
+
+        }
+
+        // SHOW FORM
+
+        function showForm(formId){
 
             signinForm.classList.remove('active');
 
@@ -276,165 +516,155 @@
 
         }
 
+        // PASSWORD TOGGLE
 
+        function togglePassword(inputId, button){
 
-        function showButtons() {
+            const input = document.getElementById(inputId);
 
-            signinForm.classList.remove('active');
+            if(input.type === "password"){
 
-            signupForm.classList.remove('active');
+                input.type = "text";
 
-            buttonContainer.style.display = 'flex';
+                button.innerText = "HIDE";
+
+            }else{
+
+                input.type = "password";
+
+                button.innerText = "SHOW";
+
+            }
 
         }
 
+        // DUMMY EMAIL
 
+        function generateDummyEmail(username){
 
-        // Helper function to convert a username into a dummy email
-
-        function generateDummyEmail(username) {
-
-            const cleanUsername = username.toLowerCase().replace(/[^a-z0-9]/g, '');
+            const cleanUsername = username
+                .toLowerCase()
+                .replace(/[^a-z0-9]/g,'');
 
             return `${cleanUsername}@dummy-app.com`;
 
         }
 
+        // SIGN UP
 
+        async function signUp(){
 
-        // 3. Supabase Auth Functions
+            if(!supabaseClient){
 
-        async function signUp() {
-
-            if (!supabaseClient) {
-
-                alert("Cannot connect to database. Check your internet connection or browser extensions.");
+                alert("Database disconnected.");
 
                 return;
 
             }
 
+            const username =
+                document.getElementById('signup-username').value;
 
+            const password =
+                document.getElementById('signup-password').value;
 
-            const username = document.getElementById('signup-username').value;
+            const gender =
+                document.getElementById('signup-gender').value;
 
-            const password = document.getElementById('signup-password').value;
+            const birthday =
+                document.getElementById('signup-birthday').value;
 
-            const gender = document.getElementById('signup-gender').value;
+            if(!username || !password){
 
-            const birthday = document.getElementById('signup-birthday').value;
-
-
-
-            if (!username || !password) {
-
-                alert("Please fill in a username and password.");
+                alert("Fill all required fields.");
 
                 return;
 
             }
 
+            const dummyEmail =
+                generateDummyEmail(username);
 
+            const { data, error } =
+                await supabaseClient.auth.signUp({
 
-            const dummyEmail = generateDummyEmail(username);
+                    email: dummyEmail,
 
+                    password: password,
 
+                    options: {
 
-            // Use supabaseClient here
-
-            const { data, error } = await supabaseClient.auth.signUp({
-
-                email: dummyEmail, 
-
-                password: password,
-
-                options: {
-
-                    data: {
-
-                        username: username,
-
-                        gender: gender,
-
-                        birthday: birthday
+                        data: {
+                            username,
+                            gender,
+                            birthday
+                        }
 
                     }
 
-                }
+                });
 
-            });
+            if(error){
 
+                alert(error.message);
 
+            }else{
 
-            if (error) {
+                alert("Account created!");
 
-                alert("Error: " + error.message);
-
-            } else {
-
-                alert("Account created successfully!");
-
-                showButtons();
+                showForm('signin-form');
 
             }
 
         }
 
+        // SIGN IN
 
+        async function signIn(){
 
-        async function signIn() {
+            if(!supabaseClient){
 
-            if (!supabaseClient) {
-
-                alert("Cannot connect to database.");
-
-                return;
-
-            }
-
-
-
-            const username = document.getElementById('login-username').value;
-
-            const password = document.getElementById('login-password').value;
-
-
-
-            if (!username || !password) {
-
-                alert("Please enter your username and password.");
+                alert("Database disconnected.");
 
                 return;
 
             }
 
+            const username =
+                document.getElementById('login-username').value;
 
+            const password =
+                document.getElementById('login-password').value;
 
-            const dummyEmail = generateDummyEmail(username);
+            if(!username || !password){
 
+                alert("Fill all fields.");
 
+                return;
 
-            // Use supabaseClient here
+            }
 
-            const { data, error } = await supabaseClient.auth.signInWithPassword({
+            const dummyEmail =
+                generateDummyEmail(username);
 
-                email: dummyEmail,
+            const { data, error } =
+                await supabaseClient.auth.signInWithPassword({
 
-                password: password,
+                    email: dummyEmail,
 
-            });
+                    password: password
 
+                });
 
+            if(error){
 
-            if (error) {
+                alert("Invalid login.");
 
-                alert("Login failed. Please check your username and password.");
+            }else{
 
-            } else {
+                alert("Logged in!");
 
-                alert("Signed in successfully!");
-
-                console.log("User Data:", data.user);
+                console.log(data.user);
 
             }
 
@@ -443,6 +673,4 @@
     </script>
 
 </body>
-
-</html> 
-
+</html>
