@@ -109,14 +109,16 @@
     </div>
 
     <script>
-        // 1. Safe Supabase Initialization
+        // 1. Safe Supabase Initialization (Renamed variable to supabaseClient)
         const supabaseUrl = 'https://bbyiajxjggvdhxxhfaeu.supabase.co/';
         const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJieWlhanhqZ2d2ZGh4eGhmYWV1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk4ODg4NDIsImV4cCI6MjA5NTQ2NDg0Mn0.JQLQ0ZXh_7T2wZ_LkU1vAx9yH4vnJ7o00W3RsX_HjZY';
-        let supabase;
+        
+        let supabaseClient;
 
         try {
             if (window.supabase) {
-                supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+                // We use window.supabase (the library) to create our specific client connection
+                supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
             } else {
                 console.error("Supabase CDN failed to load. If you are using Brave or an AdBlocker, try turning it off for this local file.");
             }
@@ -124,7 +126,7 @@
             console.error("Failed to initialize Supabase client:", error);
         }
 
-        // 2. UI Navigation Functions (Will work perfectly now even if Supabase fails)
+        // 2. UI Navigation Functions
         const buttonContainer = document.getElementById('button-container');
         const signinForm = document.getElementById('signin-form');
         const signupForm = document.getElementById('signup-form');
@@ -150,8 +152,8 @@
 
         // 3. Supabase Auth Functions
         async function signUp() {
-            if (!supabase) {
-                alert("Cannot connect to database. Check your internet connection or browser extensions (like AdBlockers).");
+            if (!supabaseClient) {
+                alert("Cannot connect to database. Check your internet connection or browser extensions.");
                 return;
             }
 
@@ -167,7 +169,8 @@
 
             const dummyEmail = generateDummyEmail(username);
 
-            const { data, error } = await supabase.auth.signUp({
+            // Use supabaseClient here
+            const { data, error } = await supabaseClient.auth.signUp({
                 email: dummyEmail, 
                 password: password,
                 options: {
@@ -188,7 +191,7 @@
         }
 
         async function signIn() {
-            if (!supabase) {
+            if (!supabaseClient) {
                 alert("Cannot connect to database.");
                 return;
             }
@@ -203,7 +206,8 @@
 
             const dummyEmail = generateDummyEmail(username);
 
-            const { data, error } = await supabase.auth.signInWithPassword({
+            // Use supabaseClient here
+            const { data, error } = await supabaseClient.auth.signInWithPassword({
                 email: dummyEmail,
                 password: password,
             });
