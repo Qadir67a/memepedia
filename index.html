@@ -28,7 +28,7 @@
             color:#121212;
         }
 
-        /* TOP BUTTONS */
+        /* TOP NAV */
 
         #top-nav{
             position:fixed;
@@ -239,7 +239,6 @@
 
         .remember-row{
             display:flex;
-            justify-content:space-between;
             align-items:center;
             font-size:14px;
         }
@@ -253,12 +252,6 @@
 
         .remember-me input{
             width:auto;
-        }
-
-        .forgot-link{
-            color:#7c3aed;
-            text-decoration:none;
-            font-weight:700;
         }
 
         .submit-btn{
@@ -293,6 +286,51 @@
             font-weight:700;
         }
 
+        /* MODERN POPUPS */
+
+        .error-popup,
+        .success-popup{
+            position:fixed;
+            top:30px;
+            left:50%;
+            transform:translateX(-50%);
+            background:#ffffff;
+            color:#121212;
+            padding:18px 24px;
+            border-radius:12px;
+            box-shadow:0 10px 30px rgba(0,0,0,0.12);
+            z-index:999999;
+            font-size:15px;
+            font-weight:700;
+            animation:popupShow .25s ease;
+        }
+
+        .error-popup{
+            border-left:5px solid #ff2d55;
+        }
+
+        .success-popup{
+            border-left:5px solid #22c55e;
+        }
+
+        @keyframes popupShow{
+            from{
+                opacity:0;
+                transform:translateX(-50%) translateY(-10px);
+            }
+
+            to{
+                opacity:1;
+                transform:translateX(-50%) translateY(0);
+            }
+        }
+
+        .input-error{
+            border-color:#ff2d55 !important;
+            background:#fff5f7 !important;
+            box-shadow:0 0 0 4px rgba(255,45,85,0.08) !important;
+        }
+
     </style>
 </head>
 <body>
@@ -300,20 +338,26 @@
     <!-- TOP NAV -->
 
     <div id="top-nav">
-        <button class="nav-btn nav-btn-outline" onclick="openAuth('signin-form')">
+
+        <button class="nav-btn nav-btn-outline"
+                onclick="openAuth('signin-form')">
             Sign In
         </button>
 
-        <button class="nav-btn nav-btn-solid" onclick="openAuth('signup-form')">
+        <button class="nav-btn nav-btn-solid"
+                onclick="openAuth('signup-form')">
             Create Account
         </button>
+
     </div>
 
-    <!-- WHITE HOMEPAGE -->
+    <!-- HOMEPAGE -->
 
     <div class="homepage" id="homepage">
 
-        <h1 class="home-logo">MEMEPEDIA</h1>
+        <h1 class="home-logo">
+            MEMEPEDIA
+        </h1>
 
         <p class="home-text">
             Enter the meme universe.
@@ -325,7 +369,7 @@
 
     <div class="auth-screen" id="auth-screen">
 
-        <!-- LEFT -->
+        <!-- LEFT PANEL -->
 
         <div class="left-panel">
 
@@ -340,22 +384,33 @@
                 </p>
 
                 <div class="input-group">
+
                     <label>Username</label>
-                    <input type="text" id="login-username" placeholder="Enter your username" required>
+
+                    <input type="text"
+                           id="login-username"
+                           placeholder="Enter your username">
+
                 </div>
 
                 <div class="input-group">
+
                     <label>Password</label>
 
                     <div class="password-wrapper">
-                        <input type="password" id="login-password" placeholder="Enter your password" required>
+
+                        <input type="password"
+                               id="login-password"
+                               placeholder="Enter your password">
 
                         <button type="button"
                                 class="toggle-password"
                                 onclick="togglePassword('login-password', this)">
                             SHOW
                         </button>
+
                     </div>
+
                 </div>
 
                 <div class="remember-row">
@@ -365,13 +420,10 @@
                         Remember Me
                     </label>
 
-                    <a href="#" class="forgot-link">
-                        Forgot Password?
-                    </a>
-
                 </div>
 
-                <button class="submit-btn" onclick="signIn()">
+                <button class="submit-btn"
+                        onclick="signIn()">
                     Log In
                 </button>
 
@@ -395,19 +447,24 @@
                 </p>
 
                 <div class="input-group">
+
                     <label>Username</label>
-                    <input type="text" id="signup-username" placeholder="Choose a username" required>
+
+                    <input type="text"
+                           id="signup-username"
+                           placeholder="Choose a username">
+
                 </div>
 
                 <div class="input-group">
+
                     <label>Password</label>
 
                     <div class="password-wrapper">
 
                         <input type="password"
                                id="signup-password"
-                               placeholder="Create a password"
-                               required>
+                               placeholder="Create a password">
 
                         <button type="button"
                                 class="toggle-password"
@@ -416,25 +473,46 @@
                         </button>
 
                     </div>
+
                 </div>
 
                 <div class="input-group">
+
                     <label>Gender</label>
 
                     <select id="signup-gender">
-                        <option value="">Select Gender</option>
-                        <option value="male">Male</option>
-                        <option value="female">Female</option>
-                        <option value="other">Other</option>
+
+                        <option value="">
+                            Select Gender
+                        </option>
+
+                        <option value="male">
+                            Male
+                        </option>
+
+                        <option value="female">
+                            Female
+                        </option>
+
+                        <option value="other">
+                            Other
+                        </option>
+
                     </select>
+
                 </div>
 
                 <div class="input-group">
+
                     <label>Birthday</label>
-                    <input type="date" id="signup-birthday" required>
+
+                    <input type="date"
+                           id="signup-birthday">
+
                 </div>
 
-                <button class="submit-btn" onclick="signUp()">
+                <button class="submit-btn"
+                        onclick="signUp()">
                     Create Account
                 </button>
 
@@ -449,10 +527,12 @@
 
         </div>
 
-        <!-- RIGHT GIF PANEL -->
+        <!-- RIGHT PANEL -->
 
         <div class="right-panel">
+
             <img src="rainbowcat.gif" alt="GIF">
+
         </div>
 
     </div>
@@ -461,19 +541,24 @@
 
         // SUPABASE
 
-        const supabaseUrl = 'https://bbyiajxjggvdhxxhfaeu.supabase.co/';
+        const supabaseUrl =
+            'https://bbyiajxjggvdhxxhfaeu.supabase.co/';
 
-        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJieWlhanhqZ2d2ZGh4eGhmYWV1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk4ODg4NDIsImV4cCI6MjA5NTQ2NDg0Mn0.JQLQ0ZXh_7T2wZ_LkU1vAx9yH4vnJ7o00W3RsX_HjZY';
+        const supabaseKey =
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJieWlhanhqZ2d2ZGh4eGhmYWV1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk4ODg4NDIsImV4cCI6MjA5NTQ2NDg0Mn0.JQLQ0ZXh_7T2wZ_LkU1vAx9yH4vnJ7o00W3RsX_HjZY';
 
         let supabaseClient;
 
         try{
 
             if(window.supabase){
-                supabaseClient = window.supabase.createClient(
-                    supabaseUrl,
-                    supabaseKey
-                );
+
+                supabaseClient =
+                    window.supabase.createClient(
+                        supabaseUrl,
+                        supabaseKey
+                    );
+
             }
 
         }catch(error){
@@ -484,13 +569,50 @@
 
         // ELEMENTS
 
-        const homepage = document.getElementById('homepage');
+        const homepage =
+            document.getElementById('homepage');
 
-        const authScreen = document.getElementById('auth-screen');
+        const authScreen =
+            document.getElementById('auth-screen');
 
-        const signinForm = document.getElementById('signin-form');
+        const signinForm =
+            document.getElementById('signin-form');
 
-        const signupForm = document.getElementById('signup-form');
+        const signupForm =
+            document.getElementById('signup-form');
+
+        // MODERN POPUP
+
+        function showPopup(message, type="error"){
+
+            const existing =
+                document.querySelector(
+                    '.error-popup, .success-popup'
+                );
+
+            if(existing){
+                existing.remove();
+            }
+
+            const popup =
+                document.createElement('div');
+
+            popup.className =
+                type === "success"
+                ? "success-popup"
+                : "error-popup";
+
+            popup.innerText = message;
+
+            document.body.appendChild(popup);
+
+            setTimeout(()=>{
+
+                popup.remove();
+
+            },3000);
+
+        }
 
         // OPEN AUTH
 
@@ -512,7 +634,8 @@
 
             signupForm.classList.remove('active');
 
-            document.getElementById(formId).classList.add('active');
+            document.getElementById(formId)
+                .classList.add('active');
 
         }
 
@@ -520,7 +643,8 @@
 
         function togglePassword(inputId, button){
 
-            const input = document.getElementById(inputId);
+            const input =
+                document.getElementById(inputId);
 
             if(input.type === "password"){
 
@@ -538,11 +662,12 @@
 
         }
 
-        // DUMMY EMAIL
+        // EMAIL GENERATOR
 
         function generateDummyEmail(username){
 
-            const cleanUsername = username
+            const cleanUsername =
+                username
                 .toLowerCase()
                 .replace(/[^a-z0-9]/g,'');
 
@@ -550,54 +675,151 @@
 
         }
 
+        // PASSWORD VALIDATION
+
+        function validatePassword(password){
+
+            const minLength =
+                password.length >= 8;
+
+            const hasUppercase =
+                /[A-Z]/.test(password);
+
+            const hasSymbol =
+                /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+            return (
+                minLength &&
+                hasUppercase &&
+                hasSymbol
+            );
+
+        }
+
+        // CLEAR ERRORS
+
+        function clearErrors(){
+
+            document
+                .querySelectorAll('input, select')
+                .forEach(el=>{
+
+                    el.classList.remove('input-error');
+
+                });
+
+        }
+
         // SIGN UP
 
         async function signUp(){
 
+            clearErrors();
+
             if(!supabaseClient){
 
-                alert("Database disconnected.");
+                showPopup("Database disconnected.");
 
                 return;
 
             }
 
             const username =
-                document.getElementById('signup-username').value;
+                document.getElementById(
+                    'signup-username'
+                );
 
             const password =
-                document.getElementById('signup-password').value;
+                document.getElementById(
+                    'signup-password'
+                );
 
             const gender =
-                document.getElementById('signup-gender').value;
+                document.getElementById(
+                    'signup-gender'
+                );
 
             const birthday =
-                document.getElementById('signup-birthday').value;
+                document.getElementById(
+                    'signup-birthday'
+                );
 
-            if(!username || !password){
+            // REQUIRED FIELDS
 
-                alert("Fill all required fields.");
+            if(
+                !username.value ||
+                !password.value ||
+                !gender.value ||
+                !birthday.value
+            ){
+
+                if(!username.value){
+                    username.classList.add('input-error');
+                }
+
+                if(!password.value){
+                    password.classList.add('input-error');
+                }
+
+                if(!gender.value){
+                    gender.classList.add('input-error');
+                }
+
+                if(!birthday.value){
+                    birthday.classList.add('input-error');
+                }
+
+                showPopup(
+                    "Please fill in all fields."
+                );
+
+                return;
+
+            }
+
+            // PASSWORD RULES
+
+            if(
+                !validatePassword(password.value)
+            ){
+
+                password.classList.add(
+                    'input-error'
+                );
+
+                showPopup(
+                    "Password must be 8+ characters with one uppercase letter and one symbol."
+                );
 
                 return;
 
             }
 
             const dummyEmail =
-                generateDummyEmail(username);
+                generateDummyEmail(
+                    username.value
+                );
 
             const { data, error } =
                 await supabaseClient.auth.signUp({
 
                     email: dummyEmail,
 
-                    password: password,
+                    password: password.value,
 
-                    options: {
+                    options:{
 
-                        data: {
-                            username,
-                            gender,
-                            birthday
+                        data:{
+
+                            username:
+                                username.value,
+
+                            gender:
+                                gender.value,
+
+                            birthday:
+                                birthday.value
+
                         }
 
                     }
@@ -606,11 +828,14 @@
 
             if(error){
 
-                alert(error.message);
+                showPopup(error.message);
 
             }else{
 
-                alert("Account created!");
+                showPopup(
+                    "Account created successfully!",
+                    "success"
+                );
 
                 showForm('signin-form');
 
@@ -622,47 +847,81 @@
 
         async function signIn(){
 
+            clearErrors();
+
             if(!supabaseClient){
 
-                alert("Database disconnected.");
+                showPopup(
+                    "Database disconnected."
+                );
 
                 return;
 
             }
 
             const username =
-                document.getElementById('login-username').value;
+                document.getElementById(
+                    'login-username'
+                );
 
             const password =
-                document.getElementById('login-password').value;
+                document.getElementById(
+                    'login-password'
+                );
 
-            if(!username || !password){
+            if(
+                !username.value ||
+                !password.value
+            ){
 
-                alert("Fill all fields.");
+                if(!username.value){
+                    username.classList.add(
+                        'input-error'
+                    );
+                }
+
+                if(!password.value){
+                    password.classList.add(
+                        'input-error'
+                    );
+                }
+
+                showPopup(
+                    "Please fill in all fields."
+                );
 
                 return;
 
             }
 
             const dummyEmail =
-                generateDummyEmail(username);
+                generateDummyEmail(
+                    username.value
+                );
 
             const { data, error } =
-                await supabaseClient.auth.signInWithPassword({
+                await supabaseClient
+                .auth
+                .signInWithPassword({
 
                     email: dummyEmail,
 
-                    password: password
+                    password: password.value
 
                 });
 
             if(error){
 
-                alert("Invalid login.");
+                showPopup(
+                    "Invalid username or password."
+                );
 
             }else{
 
-                alert("Logged in!");
+                showPopup(
+                    "Logged in successfully!",
+                    "success"
+                );
 
                 console.log(data.user);
 
