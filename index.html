@@ -12,41 +12,26 @@
         }
 
         body {
-            background-color: #ffffff;
+            /* Starry Space Background using CSS Gradients */
+            background-color: #0b010a;
+            background-image: 
+                radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 40px),
+                radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 30px),
+                radial-gradient(white, rgba(255,255,255,.1) 2px, transparent 40px);
+            background-size: 550px 550px, 350px 350px, 250px 250px;
+            background-position: 0 0, 40px 60px, 130px 270px;
             margin: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            overflow: hidden; /* Prevents scrollbars when cat flies off screen */
+            overflow: hidden;
         }
-
-        /* --- NYAN CAT CSS --- */
-        .nyan-cat {
-            position: fixed;
-            top: 30%;
-            left: -300px;
-            width: 250px;
-            opacity: 0.15; /* Makes it nearly transparent */
-            mix-blend-mode: multiply; /* Removes white background from the GIF */
-            pointer-events: none; /* Prevents the image from blocking button clicks */
-            z-index: 9999;
-            animation: floatAcross 18s linear infinite; /* Controls the floating speed */
-        }
-
-        @keyframes floatAcross {
-            0%   { transform: translate(0, 0); }
-            25%  { transform: translate(35vw, -30px); }
-            50%  { transform: translate(70vw, 20px); }
-            75%  { transform: translate(105vw, -30px); }
-            100% { transform: translate(130vw, 0); }
-        }
-        /* -------------------- */
 
         #button-container {
             display: flex;
             gap: 15px;
-            position: relative; /* Keeps buttons above background */
+            position: relative;
             z-index: 10;
         }
 
@@ -70,23 +55,51 @@
             border: 1px solid #b0008b;
         }
 
+        /* Adjusted button style slightly to pop on the dark background */
+        body:not(:has(.form-container.active)) .btn-outline {
+            color: #ff5cd3;
+            border: 1px solid #ff5cd3;
+        }
+
         .btn-solid {
             background-color: #4a043f;
             color: #ffffff;
             border: 1px solid #4a043f;
         }
 
+        /* Form Container styled into an aesthetic card with side-by-side layout */
         .form-container {
             display: none;
-            flex-direction: column;
-            width: 300px;
-            gap: 15px;
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            gap: 35px;
+            align-items: center;
             position: relative;
             z-index: 10;
         }
 
         .form-container.active {
             display: flex;
+            flex-direction: row; /* Form elements left, Nyan Cat right */
+        }
+
+        .form-fields {
+            display: flex;
+            flex-direction: column;
+            width: 300px;
+            gap: 15px;
+        }
+
+        /* --- STATIC NYAN CAT CSS --- */
+        .form-nyan-cat {
+            width: 240px; /* Big and visible */
+            height: auto;
+            opacity: 0.85; /* Beautiful visibility balance */
+            mix-blend-mode: multiply; /* Removes white background from GIF if present */
+            pointer-events: none;
+            user-select: none;
         }
 
         .form-container input, .form-container select {
@@ -94,6 +107,7 @@
             border: 1px solid #ccc;
             border-radius: 4px;
             font-size: 14px;
+            width: 100%;
         }
 
         .back-link {
@@ -107,34 +121,38 @@
 </head>
 <body>
 
-    <img src="rainbowcat.gif" alt="Floating Nyan Cat" class="nyan-cat">
-
     <div id="button-container">
         <button class="btn btn-outline" onclick="showForm('signin-form')">Sign In</button>
         <button class="btn btn-solid" onclick="showForm('signup-form')">Create a Free Account</button>
     </div>
 
     <div id="signin-form" class="form-container">
-        <h2 style="color: #4a043f; margin: 0 0 10px 0;">Sign In</h2>
-        <input type="text" id="login-username" placeholder="Username" required>
-        <input type="password" id="login-password" placeholder="Password" required>
-        <button class="btn btn-outline" onclick="signIn()">Submit</button>
-        <span class="back-link" onclick="showButtons()">Back</span>
+        <div class="form-fields">
+            <h2 style="color: #4a043f; margin: 0 0 10px 0;">Sign In</h2>
+            <input type="text" id="login-username" placeholder="Username" required>
+            <input type="password" id="login-password" placeholder="Password" required>
+            <button class="btn btn-outline" onclick="signIn()">Submit</button>
+            <span class="back-link" onclick="showButtons()">Back</span>
+        </div>
+        <img src="rainbowcat.gif" alt="Nyan Cat" class="form-nyan-cat">
     </div>
 
     <div id="signup-form" class="form-container">
-        <h2 style="color: #4a043f; margin: 0 0 10px 0;">Create Account</h2>
-        <input type="text" id="signup-username" placeholder="Username" required>
-        <input type="password" id="signup-password" placeholder="Password" required>
-        <select id="signup-gender">
-            <option value="">Select Gender</option>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-            <option value="other">Other</option>
-        </select>
-        <input type="date" id="signup-birthday" required>
-        <button class="btn btn-solid" onclick="signUp()">Register</button>
-        <span class="back-link" onclick="showButtons()">Back</span>
+        <div class="form-fields">
+            <h2 style="color: #4a043f; margin: 0 0 10px 0;">Create Account</h2>
+            <input type="text" id="signup-username" placeholder="Username" required>
+            <input type="password" id="signup-password" placeholder="Password" required>
+            <select id="signup-gender">
+                <option value="">Select Gender</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+            </select>
+            <input type="date" id="signup-birthday" required>
+            <button class="btn btn-solid" onclick="signUp()">Register</button>
+            <span class="back-link" onclick="showButtons()">Back</span>
+        </div>
+        <img src="rainbowcat.gif" alt="Nyan Cat" class="form-nyan-cat">
     </div>
 
     <script>
